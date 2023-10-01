@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 302f4f30742f6564eb913adc2c7c075c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - player: {instanceID: 0}
+  - playerpoint: {instanceID: 0}
+  - enemypoint: {instanceID: 0}
+  - PlayerHP: {instanceID: 0}
+  - EnemyHP: {instanceID: 0}
+  - attack: {instanceID: 0}
+  - next: {instanceID: 0}
+  - levelText: {instanceID: 0}
+  - roundText: {instanceID: 0}
+  - pauseButton: {instanceID: 0}
+  - resumeButton: {instanceID: 0}
+  - backToMenu: {instanceID: 0}
+  - pauseMenu: {instanceID: 0}
+  - dictionary: {fileID: 4900000, guid: 76260770d6b19fc4f8bbb8fe9c28b8ae, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -9,9 +9,12 @@ public class Stage : MonoBehaviour
 {
     [SerializeField] Button[] levelButton;
     [SerializeField] GameObject infoBuilding;
+    [SerializeField] GameObject border;
+    [SerializeField] Button back;
+
     [SerializeField] Button startLevel;
     [SerializeField] Button backLevel;
-    private int building;
+
     int indexStage; // index per stage :<
 
     [SerializeField] Camera navCam;
@@ -36,15 +39,17 @@ public class Stage : MonoBehaviour
             levelButton[x].onClick.AddListener(() => {
 
                 indexStage = index;
-                building = index;
                 BuildingMenu();
             });
         }   
     }
     private void Update()
     {
-        navCamera();
-        Debug.Log("Stage");
+        
+        if (!infoBuilding.active) //For Camera // Disable if InfoBuilding is active
+        {
+            navCamera();
+        }
     }
 
     public void BuildingMenu()
@@ -55,26 +60,21 @@ public class Stage : MonoBehaviour
     {
         PlayerPrefs.SetInt("round", 0);
         PlayerPrefs.SetInt("stage",indexStage); // Get the index of stage Clicked
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
     public void BacktoLevel()
     {
         infoBuilding.gameObject.SetActive(false);
     }
-
+    public void BacktoMenu()
+    {
+        SceneManager.LoadScene(0);
+    }
     public void DeleteSave()
     {
         PlayerPrefs.SetInt("level", 1);
         Application.LoadLevel(Application.loadedLevel);
     }
-    public void Save()
-    {
-        PlayerPrefs.SetInt("level", 3);
-
-        Application.LoadLevel(Application.loadedLevel);
-
-    }
-
     public void navCamera() // Probably different with phone touches!!! // Check ASAP
     {
         if(Input.GetMouseButtonDown(0))
@@ -87,6 +87,9 @@ public class Stage : MonoBehaviour
             Vector3 difference = dragOrigin - navCam.ScreenToWorldPoint(Input.mousePosition);
 
             navCam.transform.position += difference;
+            border.transform.position += difference;
         }
     }
+  
+
 }

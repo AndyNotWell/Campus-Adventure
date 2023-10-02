@@ -30,6 +30,7 @@ public class Characters : MonoBehaviour
     bool entrance = true, win, over = false;
     public bool attk = false;
     int turn = 0;
+    float speed = 16f;
 
     [SerializeField] Button next;
     [SerializeField] GameObject cover;
@@ -52,8 +53,8 @@ public class Characters : MonoBehaviour
     {
         if (entrance) // For ENtrance DUhhhh
         {
-            player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * 10f);
-            enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * 10f);
+            player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
+            enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
             if ((player.transform.position == playerpoint.transform.position) && (enemy[enemyIndex + round].transform.position == enemypoint.transform.position))
             {
                 entrance = false;
@@ -64,7 +65,7 @@ public class Characters : MonoBehaviour
             switch (turn)
             {
                 case 0: // Hitting the Enemy
-                    player.transform.position = Vector3.MoveTowards(player.transform.position, enemy[enemyIndex + round].transform.position, Time.deltaTime * 10f);
+                    player.transform.position = Vector3.MoveTowards(player.transform.position, enemy[enemyIndex + round].transform.position, Time.deltaTime * speed);
                     if (player.transform.position == enemypoint.transform.position)
                     {
                         turn++;
@@ -75,7 +76,7 @@ public class Characters : MonoBehaviour
                     }
                     break;
                 case 1: // Back to Original Position
-                    player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * 10f);
+                    player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
 
                    
                     if (player.transform.position == playerpoint.transform.position)
@@ -91,7 +92,7 @@ public class Characters : MonoBehaviour
                     }
                     break;
                 case 2: // Enemy hitting Player
-                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, playerpoint.transform.position, Time.deltaTime * 10f);
+                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, playerpoint.transform.position, Time.deltaTime * speed);
                     if (enemy[enemyIndex + round].transform.position == playerpoint.transform.position)
                     {
                         turn++;
@@ -102,7 +103,7 @@ public class Characters : MonoBehaviour
                     }
                     break;
                 case 3: // Enemy Original Positon
-                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * 10f);
+                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
                     if (enemy[enemyIndex + round].transform.position == enemypoint.transform.position)
                     {
                         if ((!win) && (hpEnemy <= 0))

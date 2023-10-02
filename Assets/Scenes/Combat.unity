@@ -460,7 +460,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 788, y: 363.33}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &58299185
@@ -2920,10 +2920,10 @@ RectTransform:
   - {fileID: 1403964149}
   m_Father: {fileID: 1993792800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.025, y: 0.754}
-  m_AnchorMax: {x: 0.2583344, y: 0.9776467}
-  m_AnchoredPosition: {x: 0.5, y: 0}
-  m_SizeDelta: {x: -8, y: 0}
+  m_AnchorMin: {x: 0.05, y: 0.754}
+  m_AnchorMax: {x: 0.24000001, y: 0.9844619}
+  m_AnchoredPosition: {x: -0, y: 0}
+  m_SizeDelta: {x: -0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &618648843
 MonoBehaviour:
@@ -4700,7 +4700,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.020000001, y: 0.78800005}
   m_AnchorMax: {x: 0.0775, y: 1}
-  m_AnchoredPosition: {x: -0.120025635, y: 0.19128418}
+  m_AnchoredPosition: {x: -0.12011719, y: 0.19128418}
   m_SizeDelta: {x: -1, y: -0.34999847}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &913628508
@@ -5940,7 +5940,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 788, y: 363.33}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1099086332
@@ -6612,10 +6612,10 @@ RectTransform:
   - {fileID: 1583454027}
   m_Father: {fileID: 1993792800}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.26500002, y: 0.754}
+  m_AnchorMin: {x: 0.28500003, y: 0.754}
   m_AnchorMax: {x: 0.49500003, y: 0.9776467}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -7, y: 0}
+  m_AnchoredPosition: {x: -2, y: 0}
+  m_SizeDelta: {x: -3, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1286262199
 MonoBehaviour:
@@ -7278,7 +7278,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 0.92142105, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

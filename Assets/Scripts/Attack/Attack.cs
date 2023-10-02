@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
 
 public class Attack : MonoBehaviour
 {
@@ -33,8 +31,6 @@ public class Attack : MonoBehaviour
 
     Characters characters;
     [SerializeField] GameObject top;
-
-    int i = 0;
 
     private void Awake()
     {

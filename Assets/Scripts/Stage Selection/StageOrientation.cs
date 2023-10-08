@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class StageOrientation : MonoBehaviour
 {
-  
+    bool screenOrientation;
+
     [SerializeField] RectTransform backButton;
-    bool screenOrientation = true;
+    [SerializeField] RectTransform infoBuilding;
+    [SerializeField] RectTransform infoCover;
+    [SerializeField] RectTransform[] borders;
 
     private void Awake()
     {
@@ -29,11 +32,18 @@ public class StageOrientation : MonoBehaviour
     }
     void PortraitMode()
     {
-        backButton.anchorMax = new Vector2(.25f, .8f);
+        backButton.anchorMax = new Vector2(.25f, .65f);
+        infoBuilding.anchorMin = new Vector2(.025f, .15f);
+        infoBuilding.anchorMax = new Vector2(.975f, .85f);
+        infoCover.anchorMax = new Vector2(1, .915f);
+        borders[0].anchorMin = new Vector2(0, 0.915f);
     }
     void LandscapeMode()
     {
-        backButton.anchorMin = new Vector2(.025f, .2f);
-        backButton.anchorMax = new Vector2(.1f, .8f);
+        backButton.anchorMax = new Vector2(.25f, .8f);
+        infoBuilding.anchorMin = new Vector2(.3f, 0.025f);
+        infoBuilding.anchorMax = new Vector2(.7f, 0.975f);
+        infoCover.anchorMax = new Vector2(1, .88f);
+        borders[0].anchorMin = new Vector2(0, 0.88f);
     }
 }

@@ -77,11 +77,11 @@ public class Attack : MonoBehaviour
                 }
                 if (word.Contains(answ.ToLower())&&answ.Length>=3) // Change this with Valid words // Thas goin to be Harddddddd // Use the 'valid' variable at top
                 {
-                    attack.gameObject.SetActive(true); // shows the attack button
+                    attack.interactable = true; // shows the attack button
                 }
                 else
                 {
-                    attack.gameObject.SetActive(false); // hide the attack button
+                    attack.interactable = false; // hide the attack button
                 }
                 
                
@@ -98,7 +98,7 @@ public class Attack : MonoBehaviour
         characters.hpPlayer -= characters.dmgEnemy;
 
 
-        attack.gameObject.SetActive(false);
+        attack.interactable = false;
 
         for (int i = 0; i < chosenLetters.Count; i++)
         {

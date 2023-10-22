@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using TMPro;
 
 public class Stage : MonoBehaviour
 {
     [SerializeField] Button[] levelButton;
+    [SerializeField] TextMeshProUGUI[] buildingName;
     [SerializeField] GameObject infoBuilding;
     [SerializeField] GameObject border;
     [SerializeField] Button back;
@@ -19,6 +20,18 @@ public class Stage : MonoBehaviour
 
     [SerializeField] Camera navCam;
     private Vector3 dragOrigin;
+
+    [SerializeField] SpriteRenderer stageMap;
+    private float mapMinX, mapMaxX, mapMinY, mapMaxY;
+
+    private void Awake()
+    {
+        mapMinX = stageMap.transform.position.x - stageMap.bounds.size.x / 2f;
+        mapMaxX = stageMap.transform.position.x + stageMap.bounds.size.x / 2f;
+
+        mapMinY = stageMap.transform.position.y - stageMap.bounds.size.y / 2f;
+        mapMaxY = stageMap.transform.position.y + stageMap.bounds.size.y / 2f;
+    }
 
     private void Start()
     {
@@ -41,15 +54,17 @@ public class Stage : MonoBehaviour
                 indexStage = index;
                 BuildingMenu();
             });
-        }   
+        }
     }
     private void Update()
     {
-        
-        if (!infoBuilding.active) //For Camera // Disable if InfoBuilding is active
+
+        if (!infoBuilding.active)
         {
             navCamera();
         }
+       
+
     }
 
     public void BuildingMenu()
@@ -60,6 +75,7 @@ public class Stage : MonoBehaviour
     {
         PlayerPrefs.SetInt("round", 0);
         PlayerPrefs.SetInt("stage",indexStage); // Get the index of stage Clicked
+        PlayerPrefs.SetString("building", buildingName[indexStage].text);
         SceneManager.LoadScene(2);
     }
     public void BacktoLevel()
@@ -77,19 +93,38 @@ public class Stage : MonoBehaviour
     }
     public void navCamera() // Probably different with phone touches!!! // Check ASAP
     {
-        if(Input.GetMouseButtonDown(0))
+        if (Input.touchCount > 0)
         {
-            dragOrigin = navCam.ScreenToWorldPoint(Input.mousePosition);
-        }
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                dragOrigin = navCam.ScreenToWorldPoint(touch.position);
+            }
 
-        if (Input.GetMouseButton(0))
-        {
-            Vector3 difference = dragOrigin - navCam.ScreenToWorldPoint(Input.mousePosition);
+            if (Input.touchCount == 1)
+            {
+                Vector3 difference = dragOrigin - navCam.ScreenToWorldPoint(touch.position);
 
-            navCam.transform.position += difference;
-            border.transform.position += difference;
+                navCam.transform.position = ClampCamera(navCam.transform.position + difference);
+                border.transform.position = new Vector3(navCam.transform.position.x, navCam.transform.position.y, border.transform.position.z);
+
+                // navCam.transform.position += difference;
+            }
         }
     }
-  
+    private Vector3 ClampCamera (Vector3 targetPosition)
+    {
+        float camHeight = navCam.orthographicSize;
+        float camWidth = navCam.orthographicSize * navCam.aspect;
 
+        float minX = mapMinX + camWidth;
+        float maxX = mapMaxX - camWidth;
+        float minY = mapMinY + camHeight;
+        float maxY = mapMaxY - camHeight;
+
+        float newX = Mathf.Clamp(targetPosition.x, minX, maxX);
+        float newY = Mathf.Clamp(targetPosition.y, minY, maxY);
+
+        return new Vector3(newX, newY, targetPosition.z);
+    } 
 }

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Stage1
   - Stage2
+  - Characters
+  - Letters
   layers:
   - Default
   - TransparentFX

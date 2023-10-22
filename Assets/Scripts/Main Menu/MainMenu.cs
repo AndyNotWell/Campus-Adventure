@@ -38,7 +38,10 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(1);
     }
-
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
     void PortraitMode()
     {
         menuButtonsPos[0].anchorMin = new Vector2(.2f, .8f);

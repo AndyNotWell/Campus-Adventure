@@ -6,53 +6,66 @@ using UnityEngine.UI;
 
 public class Characters : MonoBehaviour
 {
-    //For Player and Enemy
+    // FOR PLAYER AND ENEMY
     [SerializeField] GameObject player;
     [SerializeField] GameObject playerpoint; // Standing Point for the Player
     [SerializeField] GameObject enemypoint; // Standing Point for the Enemy
 
-    // Player and Enemy HP // Player and Enemy Damage
-    public int hpPlayer = 100, hpEnemy = 100, dmgPlayer = 10, dmgEnemy = 10;
+    [SerializeField] Image healthBarPlayer,healthBarEnemy;
+    public float hpPlayer, hpEnemy;
+    float hpPlayerMax = 100, hpEnemyMax = 100; // Player and Enemy HP 
+    public float dmgPlayer = 30, dmgEnemy = 10; // Player and Enemy Damage
+    float lerpSpeed = 20; // for smooth deduction of health
 
-    // Enemies each stage // Add Enemy // Add Stage
-    [SerializeField] GameObject[] EnemyS1;
-    [SerializeField] GameObject[] EnemyS2;
-    [SerializeField] GameObject[] EnemyS3;
-    List<GameObject> enemy = new List<GameObject>(); // Add every enemies inside one list
+    // FOR ENEMIES EACH STAGE
+
+    [SerializeField] GameObject[] EnemyS1, EnemyS2, EnemyS3, EnemyS4, EnemyS5, EnemyS6, EnemyS7; // Enemies each stage // Add Enemy // Add Stage
+    List<GameObject> enemy = new List<GameObject> { };  // Add every enemies inside one list
     int enemyIndex = 0;
 
-    [SerializeField] TextMeshProUGUI levelText;
-    [SerializeField] TextMeshProUGUI roundText;
+    // STAGE AND ROUND
 
-    int stageAt, round = 0; //current stage and round
-    int[] sizeStage; // Make a list of size each stage, for finding index too
+    int stageAt, round = 0; // Current stage and round
+    int[] sizeStage; // Make a list of size each stage, for finding index too // Depends with how many enemy each stage
 
-    bool entrance = true, win, over = false;
-    public bool attk = false;
+    [SerializeField] TextMeshProUGUI buildingNameText;
+    [SerializeField] TextMeshProUGUI enemyNameText;
+
+    bool entrance = true, win, gameOver = false;
+    public bool attk = false, potion = false;
     int turn = 0;
     float speed = 16f;
 
+    // Gameobject of Menus and Continues
     [SerializeField] Button next;
     [SerializeField] GameObject cover;
-    [SerializeField] GameObject endMenu;
+    [SerializeField] GameObject menuDone, menuStageClear, menuPlayerLose, menuFinalStage;
 
     private void Start()
     {
         // Add all enemies in one tray or list
-        enemy.AddRange(EnemyS1);
-        enemy.AddRange(EnemyS2);
-        enemy.AddRange(EnemyS3);
+        enemy.AddRange(EnemyS1);enemy.AddRange(EnemyS2);enemy.AddRange(EnemyS3);
+        enemy.AddRange(EnemyS4);enemy.AddRange(EnemyS5);enemy.AddRange(EnemyS6);
+        enemy.AddRange(EnemyS7);
 
-        sizeStage = new int[] { EnemyS1.Length, EnemyS2.Length, EnemyS3.Length }; // list the sizes each stage // need to manually add other stages :<
-       
-        stageAt = PlayerPrefs.GetInt("stage"); // Get the current stage
+        // list the sizes each stage // need to manually add other stages :<
+        sizeStage = new int[] { EnemyS1.Length, EnemyS2.Length, EnemyS3.Length, EnemyS4.Length,
+                                EnemyS5.Length, EnemyS6.Length, EnemyS7.Length}; 
         
+        stageAt = PlayerPrefs.GetInt("stage"); // Get the current stag
         EnemyIndex();
+
+        hpPlayer = PlayerPrefs.GetFloat("playerHP");
+        hpEnemyMax += (20 * stageAt);
+        Debug.Log(hpEnemyMax);
     }
     private void Update()
     {
         if (entrance) // For ENtrance DUhhhh
         {
+            hpEnemy = hpEnemyMax;
+            HealthBarFiller();
+
             player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
             enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
             if ((player.transform.position == playerpoint.transform.position) && (enemy[enemyIndex + round].transform.position == enemypoint.transform.position))
@@ -76,6 +89,8 @@ public class Characters : MonoBehaviour
                     }
                     break;
                 case 1: // Back to Original Position
+
+                    HealthBarFiller();
                     player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
 
                    
@@ -92,23 +107,30 @@ public class Characters : MonoBehaviour
                     }
                     break;
                 case 2: // Enemy hitting Player
+
+                    
                     enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, playerpoint.transform.position, Time.deltaTime * speed);
                     if (enemy[enemyIndex + round].transform.position == playerpoint.transform.position)
                     {
+                        
                         turn++;
-                        if (hpEnemy <= 0) // For animation of death right after hit :D
+                        if (hpPlayer <= 0) // For animation of death right after hit :D
                         {
                             win = false;
                         }
+                        
                     }
                     break;
                 case 3: // Enemy Original Positon
+
+                    HealthBarFiller();
                     enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
                     if (enemy[enemyIndex + round].transform.position == enemypoint.transform.position)
                     {
-                        if ((!win) && (hpEnemy <= 0))
+                        if ((!win) && (hpPlayer <= 0))
                         {
                             turn = 4;
+                            
                         }
                         else
                         {
@@ -122,20 +144,19 @@ public class Characters : MonoBehaviour
                     { 
                         round++;
                         int levelSize = PlayerPrefs.GetInt("level");
-                        if (round == sizeStage[stageAt])
+                        if (round == sizeStage[stageAt]) // If entire stage is done // Else next round
                         {
+                            PlayerPrefs.SetFloat("playerHP", hpPlayer);
                             Debug.Log("Next Stage");
                             if (levelSize == stageAt + 1)
                             {
-                                
                                 Debug.Log("Create new Level");
                                 PlayerPrefs.SetInt("level", stageAt + 2);
-                               
-
                             }
                             else if (sizeStage.Length == stageAt + 1)
                             {
                                 Debug.Log("Final Game");
+                                gameOver = true;
                                 
                             }
                             else if(levelSize>stageAt + 1)
@@ -147,12 +168,24 @@ public class Characters : MonoBehaviour
                                 Debug.Log("Error");
                             }
 
-                            endMenu.SetActive(true);
+                            menuDone.SetActive(true);
+                            if (!gameOver)
+                            {
+                                menuStageClear.SetActive(true);
+                            }
+                            
+                            else if(gameOver)
+                            {
+                                menuFinalStage.SetActive(true);
+                            }
+                            else
+                            {
+                                Debug.Log("Error in MENUS");
+                            }
                         }
                         else
                         {
-                            next.gameObject.SetActive(true);
-                            over = true;
+                            next.gameObject.SetActive(true);         
                             Debug.Log("Here");
                         }
 
@@ -160,6 +193,8 @@ public class Characters : MonoBehaviour
                     else if (!win)
                     {
                         Debug.Log("Enemy Wins");
+                        menuDone.SetActive(true);
+;                        menuPlayerLose.SetActive(true);
                     }
                     attk = false;
                     break;
@@ -169,14 +204,17 @@ public class Characters : MonoBehaviour
 
             cover.SetActive(attk); // Hide the cover after the attack 
         }
+        
         //End of this attack bullshit
+        if(potion)
+        {
+            HealthBarFiller();
+            potion = false;
+        }
     }
     public void EnemyIndex()
     {
-
-        levelText.text = "Stage " + (stageAt + 1);
-        roundText.text = "Round " + (round + 1);
-        hpEnemy = 10; // Change this to 100 after
+        //hpEnemy = 10; // Change this to 100 after
         turn = 0;
         enemyIndex = 0;
 
@@ -184,13 +222,42 @@ public class Characters : MonoBehaviour
         {
             enemyIndex += sizeStage[x];
         }
+
+        buildingNameText.text = PlayerPrefs.GetString("building");
+        enemyNameText.text = enemy[enemyIndex + round].name;
     }
     public void Continue()
     {
-        Debug.Log(enemyIndex + " " + (round-1) );
         enemy[enemyIndex + round-1].SetActive(false);
         entrance = true;
-        next.gameObject.SetActive(false); over = false;
+        next.gameObject.SetActive(false);
         EnemyIndex();
     }
+    void HealthBarFiller() // For Quick Animation of Health and Colors
+    {
+        if(turn == 1)
+        {
+            healthBarEnemy.fillAmount = Mathf.Lerp(healthBarEnemy.fillAmount, hpEnemy / hpEnemyMax, (lerpSpeed * Time.deltaTime));
+            Color healthColorEnemy = Color.Lerp(Color.red, Color.green, (hpEnemy / hpEnemyMax));
+            healthBarEnemy.color = healthColorEnemy;
+        }
+        else if(turn == 3)
+        {
+            healthBarPlayer.fillAmount = Mathf.Lerp(healthBarPlayer.fillAmount, hpPlayer / hpPlayerMax, (lerpSpeed * Time.deltaTime));
+            Color healthColorPlayer = Color.Lerp(Color.red, Color.green, (hpPlayer / hpPlayerMax));
+            healthBarPlayer.color = healthColorPlayer;
+        }
+        else
+        {
+            healthBarEnemy.fillAmount = Mathf.Lerp(healthBarEnemy.fillAmount, hpEnemy / hpEnemyMax, (1f));
+            Color healthColorEnemy = Color.Lerp(Color.red, Color.green, (hpEnemy / hpEnemyMax));
+            healthBarEnemy.color = healthColorEnemy;
+            healthBarPlayer.fillAmount = Mathf.Lerp(healthBarPlayer.fillAmount, hpPlayer / hpPlayerMax, (1f));
+            Color healthColorPlayer = Color.Lerp(Color.red, Color.green, (hpPlayer / hpPlayerMax));
+            healthBarPlayer.color = healthColorPlayer;
+        }
+    }
+
+    
+   
 }

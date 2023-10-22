@@ -13,6 +13,7 @@ public class Attack : MonoBehaviour
 
     [SerializeField] Button[] lettersButton; //Buttons for the Letters
     List<Vector2> lettersPosition = new List<Vector2>();
+    bool click = false;
 
     [SerializeField] TextMeshProUGUI[] letters;
     List<int> chosenLetters = new List<int>(); // List of chose Letters or Button
@@ -32,6 +33,16 @@ public class Attack : MonoBehaviour
     Characters characters;
     [SerializeField] GameObject top;
 
+    bool dmgExtra=false;
+
+    int x = 0;
+    float pos; // position of buttons
+
+    [SerializeField] TextMeshProUGUI getText;
+    [SerializeField] TextMeshProUGUI setText;
+    [SerializeField] TMP_InputField inputHere;
+
+
     private void Awake()
     {
         characters = top.GetComponent<Characters>();
@@ -39,9 +50,10 @@ public class Attack : MonoBehaviour
 
     void Start()
     {
-       int x = 0;
-       float pos; // position of buttons
-        
+
+        //inputHere.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+        inputHere.onEndEdit.AddListener(delegate { LockInput(); });
+
         for (x = 0; x < lettersButton.Length; x++)
         {
             int index = x;
@@ -50,31 +62,22 @@ public class Attack : MonoBehaviour
                 
                 if (!chosenLetters.Contains(index)) // Adding letters to the player's answer
                 {
-                    answ += letters[index].text;
                     chosenLetters.Add(index);
-                   
-                    pos = (chosenLetters.Count-1) * .55f; // Great fucking idea, position the button perfectly check your notes dumdum
-                    for (x = 0; x < chosenLetters.Count; x++)
-                    {
-                        lettersButton[chosenLetters[x]].transform.position = new Vector2(-pos + (x*1.1f), 1);
-                    }
-                    
                 }
                 else // remove the letter to your answer
                 {
                     lettersButton[index].transform.position = lettersPosition[index];
                     chosenLetters.Remove(index);
-                    answ = "";
-                  
-                    pos = (chosenLetters.Count - 1) * .55f;
-                    for (x = 0; x < chosenLetters.Count; x++)
-                    {
-                        answ += letters[chosenLetters[x]].text;
-                        lettersButton[chosenLetters[x]].transform.position = new Vector2(-pos + (x * 1.1f), 1);
-
-                    }
-                   
                 }
+
+                answ = "";
+                pos = (chosenLetters.Count - 1) * .6f; // Great fucking idea, position the button perfectly check your notes dumdum
+                for (x = 0; x < chosenLetters.Count; x++)
+                {
+                    answ += letters[chosenLetters[x]].text;
+                }
+                click = true;
+
                 if (word.Contains(answ.ToLower())&&answ.Length>=3) // Change this with Valid words // Thas goin to be Harddddddd // Use the 'valid' variable at top
                 {
                     attack.interactable = true; // shows the attack button
@@ -91,13 +94,33 @@ public class Attack : MonoBehaviour
         WordFinder();
         Questions();
     }
-    public void hit()
+    private void Update()
+    {
+        if (click)
+        {
+            for (x = 0; x < chosenLetters.Count; x++)
+            {
+                lettersButton[chosenLetters[x]].transform.position = Vector2.MoveTowards(lettersButton[chosenLetters[x]].transform.position, new Vector2(-pos + (x * 1.2f), 1), 12f * Time.deltaTime);
+                Vector3 hold = new Vector2(-pos + (x * 1.2f), 1);
+            if (lettersButton[chosenLetters[chosenLetters.Count-1]].transform.position == hold)
+                {
+                    Debug.Log("Stop");
+                    click = false;
+                }
+            }
+           
+
+        }
+    }
+        public void hit()
     {
         characters.attk = true;
-        characters.hpEnemy -= characters.dmgPlayer;
-        characters.hpPlayer -= characters.dmgEnemy;
+        
+        if(dmgExtra) { characters.hpEnemy -= (characters.dmgPlayer * 2); dmgExtra = false; }
+        else { characters.hpEnemy -= characters.dmgPlayer; }
+        if(!(characters.hpEnemy<=0)) { characters.hpPlayer -= characters.dmgEnemy;  }
 
-
+        
         attack.interactable = false;
 
         for (int i = 0; i < chosenLetters.Count; i++)
@@ -110,7 +133,30 @@ public class Attack : MonoBehaviour
         answ = "";
         chosenLetters.Clear();
     }
-    
+
+    public void PotionHeal()
+    {
+
+        if (characters.hpPlayer >= 100)
+        {
+
+        }
+        else
+        {
+            characters.hpPlayer += 20f;
+            if (characters.hpPlayer > 100)
+            {
+                characters.hpPlayer = 100f;
+            }
+            //PlayerPrefs.SetFloat("playerHP", hpPlayer);
+            characters.potion = true;
+        }
+    }
+    public void PotionDamage()
+    {
+        dmgExtra = true;
+    }
+
     public void Questions()
     {
         string sets = "";
@@ -169,4 +215,30 @@ public class Attack : MonoBehaviour
 
     }
 
+    public void zhit()
+    {
+        setText.text = getText.text;
+    }
+    /*
+    void ValueChangeCheck()
+    {
+        Debug.Log("Value Changed");
+        inputHere.text = inputHere.text[0].ToString();
+        setText.text = inputHere.text;
+    }*/
+    void LockInput()
+    {
+        if (inputHere.text.Length > 1)
+        {
+            setText.text = "Too Long";
+        }
+        else if (inputHere.text.Length == 0)
+        {
+            setText.text = "Main Input Empty";
+        }
+        else
+        {
+           setText.text = inputHere.text;
+        }
+    }
 }

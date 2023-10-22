@@ -6,6 +6,7 @@ public class CombatOrientation : MonoBehaviour
 {
     bool screenOrientation;
     [SerializeField] RectTransform top;
+    [SerializeField] RectTransform ground;
     [SerializeField] RectTransform bottom;
     [SerializeField] RectTransform[] pillars;
 
@@ -41,6 +42,7 @@ public class CombatOrientation : MonoBehaviour
     void PortraitMode()
     {
         top.anchorMin = new Vector2(0, .6f);
+        ground.anchorMax = new Vector2(1, .35f);
         bottom.anchorMax = new Vector2(1, .6f);
         pillars[0].anchorMin = new Vector2(0, .95f);
         pillars[1].anchorMax = new Vector2(1, .05f);
@@ -67,22 +69,22 @@ public class CombatOrientation : MonoBehaviour
     }
     void LandscapeMode()
     {
-        top.anchorMin= new Vector2(0, .515f);
-        bottom.anchorMax = new Vector2(1    , .515f);
+        top.anchorMin= new Vector2(0, .5f);
+        ground.anchorMax = new Vector2(1, .775f);
+        bottom.anchorMax = new Vector2(1    , .5f);
         pillars[0].anchorMin = new Vector2(0, .90f); // For Top Pillar
         pillars[1].anchorMax = new Vector2(1, .1f);  // For Bottom Pillar
-        pillars[2].anchorMin = new Vector2(.325f, 0);    // For 2nd Pillar
+        pillars[2].anchorMin = new Vector2(.33f, 0);    // For 2nd Pillar
         pillars[2].anchorMax = new Vector2(.375f, 1);
         pillars[3].anchorMin = new Vector2(.625f, 0);    // For 3rd Pillar
-        pillars[3].anchorMax = new Vector2(.675f, 1);
+        pillars[3].anchorMax = new Vector2(.67f, 1);
 
-        letterHolder.anchorMin = new Vector2(.375f, .1f);
-        letterHolder.anchorMax = new Vector2(.625f, .9f);
-
-        potionBox.anchorMin = new Vector2(.05f, .45f);
-        potionBox.anchorMax = new Vector2(.325f, .9f);
-        actionBox.anchorMin = new Vector2(.05f, .1f);
-        actionBox.anchorMax = new Vector2(.325f, .45f);
+        letterHolder.anchorMin = new Vector2(.375f, .075f);
+        letterHolder.anchorMax = new Vector2(.625f, .925f);
+        potionBox.anchorMin = new Vector2(.05f, .6f);
+        potionBox.anchorMax = new Vector2(.33f, .925f);
+        actionBox.anchorMin = new Vector2(.05f, .075f);
+        actionBox.anchorMax = new Vector2(.33f, .6f);
 
         foreach (GameObject character in characters)
         {

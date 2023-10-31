@@ -57,3 +57,6 @@ TagManager:
   - name: Menu
     uniqueID: 3807832685
     locked: 0
+  - name: Story
+    uniqueID: 4287089427
+    locked: 0

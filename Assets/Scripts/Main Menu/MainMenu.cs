@@ -17,6 +17,18 @@ public class MainMenu : MonoBehaviour
     {
         screenOrientation = Screen.orientation == ScreenOrientation.Portrait;
     }
+    private void Start()
+    {
+        if(PlayerPrefs.GetInt("newGame")==0)
+        {
+            PlayerPrefs.SetInt("potionHeal", 2);
+            PlayerPrefs.SetInt("potionDamage", 2);
+            PlayerPrefs.SetInt("potionLetter", 2);
+            PlayerPrefs.SetFloat("playerHP", 100);
+            PlayerPrefs.SetInt("level", 1);
+            PlayerPrefs.SetInt("newGame", 1);
+        }
+    }
     private void Update()
     {
         if (Screen.orientation == ScreenOrientation.Portrait && screenOrientation == true)
@@ -36,11 +48,15 @@ public class MainMenu : MonoBehaviour
 
     public void PlayGame()
     {
-        SceneManager.LoadScene(1);
+        SceneController.instance.ToStage();
     }
     public void QuitGame()
     {
         Application.Quit();
+    }
+    public void Settings()
+    {
+        SceneController.instance.OpenSettings();
     }
     void PortraitMode()
     {
@@ -53,11 +69,11 @@ public class MainMenu : MonoBehaviour
     }
     void LandscapeMode()
     {
-        menuButtonsPos[0].anchorMin = new Vector2(.15f, .25f);
-        menuButtonsPos[0].anchorMax = new Vector2(.35f, .75f);
-        menuButtonsPos[1].anchorMin = new Vector2(.40f, .25f);
-        menuButtonsPos[1].anchorMax = new Vector2(.60f, .75f);
-        menuButtonsPos[2].anchorMin = new Vector2(.65f, .25f);
-        menuButtonsPos[2].anchorMax = new Vector2(.85f, .75f);
+        menuButtonsPos[0].anchorMin = new Vector2(.4f, .55f);
+        menuButtonsPos[0].anchorMax = new Vector2(.6f, .7f);
+        menuButtonsPos[1].anchorMin = new Vector2(.4f, .35f);
+        menuButtonsPos[1].anchorMax = new Vector2(.6f, .5f);
+        menuButtonsPos[2].anchorMin = new Vector2(.4f, .15f);
+        menuButtonsPos[2].anchorMax = new Vector2(.6f, .3f);
     }
 }

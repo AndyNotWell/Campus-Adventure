@@ -18,18 +18,15 @@ public class Characters : MonoBehaviour
     float lerpSpeed = 20; // for smooth deduction of health
 
     // FOR ENEMIES EACH STAGE
-
-    [SerializeField] GameObject[] EnemyS1, EnemyS2, EnemyS3, EnemyS4, EnemyS5, EnemyS6, EnemyS7; // Enemies each stage // Add Enemy // Add Stage
-    List<GameObject> enemy = new List<GameObject> { };  // Add every enemies inside one list
-    int enemyIndex = 0;
+    [SerializeField] GameObject[] enemyStage;
+    [SerializeField] TextMeshProUGUI enemyNameText;
+    GameObject enemy;
 
     // STAGE AND ROUND
-
     int stageAt, round = 0; // Current stage and round
-    int[] sizeStage; // Make a list of size each stage, for finding index too // Depends with how many enemy each stage
 
     [SerializeField] TextMeshProUGUI buildingNameText;
-    [SerializeField] TextMeshProUGUI enemyNameText;
+    [SerializeField] GameObject[] buildingImage;
 
     bool entrance = true, win, gameOver = false;
     public bool attk = false, potion = false;
@@ -43,42 +40,41 @@ public class Characters : MonoBehaviour
 
     private void Start()
     {
-        // Add all enemies in one tray or list
-        enemy.AddRange(EnemyS1);enemy.AddRange(EnemyS2);enemy.AddRange(EnemyS3);
-        enemy.AddRange(EnemyS4);enemy.AddRange(EnemyS5);enemy.AddRange(EnemyS6);
-        enemy.AddRange(EnemyS7);
-
-        // list the sizes each stage // need to manually add other stages :<
-        sizeStage = new int[] { EnemyS1.Length, EnemyS2.Length, EnemyS3.Length, EnemyS4.Length,
-                                EnemyS5.Length, EnemyS6.Length, EnemyS7.Length}; 
         
         stageAt = PlayerPrefs.GetInt("stage"); // Get the current stag
+        enemy = enemyStage[stageAt].transform.GetChild(round).gameObject;
+        for (int x = 0; x < buildingImage.Length; x++) { buildingImage[x].SetActive(false); }
         EnemyIndex();
 
         hpPlayer = PlayerPrefs.GetFloat("playerHP");
         hpEnemyMax += (20 * stageAt);
-        Debug.Log(hpEnemyMax);
+
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
     }
     private void Update()
     {
+
         if (entrance) // For ENtrance DUhhhh
         {
             hpEnemy = hpEnemyMax;
             HealthBarFiller();
 
             player.transform.position = Vector3.MoveTowards(player.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
-            enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
-            if ((player.transform.position == playerpoint.transform.position) && (enemy[enemyIndex + round].transform.position == enemypoint.transform.position))
+            enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, enemypoint.transform.position, Time.deltaTime * speed);
+            if ((player.transform.position == playerpoint.transform.position) && (enemy.transform.position == enemypoint.transform.position))
             {
                 entrance = false;
             }
         }
         if (attk) // Player or Enemy Attack // Observe this more, may find efficiet wayssss // Add animations here !!
         {
+            int stageRound = enemyStage[stageAt].transform.childCount;
+
             switch (turn)
             {
                 case 0: // Hitting the Enemy
-                    player.transform.position = Vector3.MoveTowards(player.transform.position, enemy[enemyIndex + round].transform.position, Time.deltaTime * speed);
+                    player.transform.position = Vector3.MoveTowards(player.transform.position, enemy.transform.position, Time.deltaTime * speed);
                     if (player.transform.position == enemypoint.transform.position)
                     {
                         turn++;
@@ -109,8 +105,8 @@ public class Characters : MonoBehaviour
                 case 2: // Enemy hitting Player
 
                     
-                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, playerpoint.transform.position, Time.deltaTime * speed);
-                    if (enemy[enemyIndex + round].transform.position == playerpoint.transform.position)
+                    enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, playerpoint.transform.position, Time.deltaTime * speed);
+                    if (enemy.transform.position == playerpoint.transform.position)
                     {
                         
                         turn++;
@@ -124,8 +120,8 @@ public class Characters : MonoBehaviour
                 case 3: // Enemy Original Positon
 
                     HealthBarFiller();
-                    enemy[enemyIndex + round].transform.position = Vector3.MoveTowards(enemy[enemyIndex + round].transform.position, enemypoint.transform.position, Time.deltaTime * speed);
-                    if (enemy[enemyIndex + round].transform.position == enemypoint.transform.position)
+                    enemy.transform.position = Vector3.MoveTowards(enemy.transform.position, enemypoint.transform.position, Time.deltaTime * speed);
+                    if (enemy.transform.position == enemypoint.transform.position)
                     {
                         if ((!win) && (hpPlayer <= 0))
                         {
@@ -144,8 +140,9 @@ public class Characters : MonoBehaviour
                     { 
                         round++;
                         int levelSize = PlayerPrefs.GetInt("level");
-                        if (round == sizeStage[stageAt]) // If entire stage is done // Else next round
+                        if (round == stageRound) // If entire stage is done // Else next round
                         {
+
                             PlayerPrefs.SetFloat("playerHP", hpPlayer);
                             Debug.Log("Next Stage");
                             if (levelSize == stageAt + 1)
@@ -153,7 +150,7 @@ public class Characters : MonoBehaviour
                                 Debug.Log("Create new Level");
                                 PlayerPrefs.SetInt("level", stageAt + 2);
                             }
-                            else if (sizeStage.Length == stageAt + 1)
+                            else if (enemyStage.Length == stageAt + 1)
                             {
                                 Debug.Log("Final Game");
                                 gameOver = true;
@@ -216,19 +213,16 @@ public class Characters : MonoBehaviour
     {
         //hpEnemy = 10; // Change this to 100 after
         turn = 0;
-        enemyIndex = 0;
-
-        for (int x=0;x<stageAt;x++)
-        {
-            enemyIndex += sizeStage[x];
-        }
 
         buildingNameText.text = PlayerPrefs.GetString("building");
-        enemyNameText.text = enemy[enemyIndex + round].name;
+        enemyNameText.text = enemy.name;
+        buildingImage[stageAt].SetActive(true);
+
     }
     public void Continue()
     {
-        enemy[enemyIndex + round-1].SetActive(false);
+        enemy.SetActive(false);
+        enemy = enemyStage[stageAt].transform.GetChild(round).gameObject;
         entrance = true;
         next.gameObject.SetActive(false);
         EnemyIndex();

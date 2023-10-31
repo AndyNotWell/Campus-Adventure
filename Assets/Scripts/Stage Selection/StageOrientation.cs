@@ -41,9 +41,9 @@ public class StageOrientation : MonoBehaviour
     void LandscapeMode()
     {
         backButton.anchorMax = new Vector2(.25f, .8f);
-        infoBuilding.anchorMin = new Vector2(.3f, 0.025f);
-        infoBuilding.anchorMax = new Vector2(.7f, 0.975f);
-        infoCover.anchorMax = new Vector2(1, .88f);
+        infoBuilding.anchorMin = new Vector2(.2f, 0.025f);
+        infoBuilding.anchorMax = new Vector2(.8f, 0.975f);
+        infoCover.anchorMax = new Vector2(1, 1f);
         borders[0].anchorMin = new Vector2(0, 0.88f);
     }
 }

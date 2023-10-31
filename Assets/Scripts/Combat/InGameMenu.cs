@@ -16,14 +16,19 @@ public class Menu : MonoBehaviour
         }
         public void BackToMenu()
         {
-            SceneManager.LoadScene(0);
+        SceneController.instance.ToMenu();
         }
         public void BackToStage()
         {
-            SceneManager.LoadScene(1);
+        SceneController.instance.ToStage();
         }
         public void Retry()
         {
             Application.LoadLevel(Application.loadedLevel);
         }
+        public void Settings()
+        {
+        SceneController.instance.OpenSettings();
+     }   
+
 }

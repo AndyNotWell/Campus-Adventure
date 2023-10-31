@@ -69,21 +69,21 @@ public class CombatOrientation : MonoBehaviour
     }
     void LandscapeMode()
     {
-        top.anchorMin= new Vector2(0, .5f);
+        top.anchorMin= new Vector2(0, .45f);
         ground.anchorMax = new Vector2(1, .775f);
-        bottom.anchorMax = new Vector2(1    , .5f);
-        pillars[0].anchorMin = new Vector2(0, .90f); // For Top Pillar
-        pillars[1].anchorMax = new Vector2(1, .1f);  // For Bottom Pillar
+        bottom.anchorMax = new Vector2(1    , .45f);
+        pillars[0].anchorMin = new Vector2(0, .925f); // For Top Pillar
+        pillars[1].anchorMax = new Vector2(1, .05f);  // For Bottom Pillar
         pillars[2].anchorMin = new Vector2(.33f, 0);    // For 2nd Pillar
         pillars[2].anchorMax = new Vector2(.375f, 1);
         pillars[3].anchorMin = new Vector2(.625f, 0);    // For 3rd Pillar
         pillars[3].anchorMax = new Vector2(.67f, 1);
 
-        letterHolder.anchorMin = new Vector2(.375f, .075f);
-        letterHolder.anchorMax = new Vector2(.625f, .925f);
+        letterHolder.anchorMin = new Vector2(.375f, .05f);
+        letterHolder.anchorMax = new Vector2(.625f, .95f);
         potionBox.anchorMin = new Vector2(.05f, .6f);
-        potionBox.anchorMax = new Vector2(.33f, .925f);
-        actionBox.anchorMin = new Vector2(.05f, .075f);
+        potionBox.anchorMax = new Vector2(.33f, .95f);
+        actionBox.anchorMin = new Vector2(.05f, .05f);
         actionBox.anchorMax = new Vector2(.33f, .6f);
 
         foreach (GameObject character in characters)
